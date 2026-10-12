@@ -1,19 +1,58 @@
-# :earth_americas: GDP dashboard template
+# 📊 학생 성적 탐색
 
-A simple Streamlit app showing the GDP of different countries in the world.
+선생님이 직접 업로드한 CSV로 학생의 배경과 수학·읽기·쓰기 점수를 비교하는 Streamlit 실습 앱입니다. 학생 데이터는 프로젝트에 포함하지 않습니다.
 
-[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://gdp-dashboard-template.streamlit.app/)
+## 앱에서 할 수 있는 일
 
-### How to run it on your own machine
+- 사이드바에 본인이 가진 학생 성적 CSV를 업로드하면 분석 화면이 열립니다. 업로드 전에는 데이터와 차트를 표시하지 않습니다.
+- 사이드바에서 성별, 인종/배경 그룹, 부모 학력, 급식 유형, 시험 대비 과정과 세 과목 평균 점수 범위를 선택합니다.
+- 상단에서 전체·선택 학생 수와 선택 학생의 과목별 평균을 확인합니다. 평균 아래의 차이는 전체 학생 평균 대비 점수 차이입니다.
+- **배경 요인별 성적 비교**: 비교 기준에 따른 과목별 평균 막대그래프, 선택 과목의 박스 플롯, 급식 유형별 평균 점수 히스토그램을 봅니다.
+- **과목 간 상관관계**: 가로축·세로축 과목과 색상 구분을 선택해 산점도, 전체 선택 학생의 회귀선, 피어슨 상관계수 히트맵을 봅니다.
+- **데이터 상세 조회**: 선택한 학생의 데이터와 기술통계를 확인하고 필터 결과를 CSV로 다운로드합니다.
 
-1. Install the requirements
+## 프로젝트 파일
 
+- `streamlit_app.py`: 화면과 분석 기능을 구현하는 메인 파일입니다.
+- `requirements.txt`: 앱에서 직접 사용하는 `streamlit`, `pandas`, `altair`를 기록합니다.
+- `data/gdp_data.csv`: 기존 GDP 예제 데이터이며 현재 앱에서는 사용하지 않습니다.
+
+## Codespaces에서 실행하기
+
+Codespaces에서 제공하는 Python 환경을 그대로 사용합니다. 가상환경을 만들거나 활성화하지 않고, Python 버전과 개발 환경 설정을 임의로 변경하지 않습니다.
+
+1. 필요한 패키지가 설치되어 있지 않으면 터미널에서 설치합니다.
+
+   ```bash
+   python -m pip install -r requirements.txt
    ```
-   $ pip install -r requirements.txt
+
+2. 앱을 실행합니다.
+
+   ```bash
+   python -m streamlit run streamlit_app.py
    ```
 
-2. Run the app
+3. Codespaces의 **포트(Ports)** 탭에서 `8501` 포트를 브라우저로 엽니다. 실행을 종료하려면 터미널에서 `Ctrl+C`를 누릅니다.
 
-   ```
-   $ streamlit run streamlit_app.py
-   ```
+4. 앱 사이드바의 **학생 성적 CSV 업로드**에서 본인이 가진 파일을 선택합니다. 파일 이름은 `StudentsPerformance.csv`가 아니어도 됩니다. 다른 파일로 바꾸거나 파일을 제거하면 학생 필터가 초기화됩니다.
+
+새 패키지는 필요할 때만 `python -m pip install 패키지이름`으로 설치하고 `requirements.txt`에 추가합니다. 설치된 모든 패키지를 일괄적으로 기록하지 않습니다. 실습 코드는 `streamlit_app.py`를 중심으로 작성합니다.
+
+## 업로드할 CSV 형식
+
+UTF-8 형식으로 저장된 쉼표 구분 CSV에 다음 8개 열이 필요합니다.
+
+```text
+gender,race/ethnicity,parental level of education,lunch,test preparation course,math score,reading score,writing score
+```
+
+배경 변인에 빈 값이 없어야 하며, 점수는 빈 값 없이 0~100 사이의 숫자여야 합니다. 필수 열이 없거나 잘못된 값이 있으면 안내 메시지를 표시합니다. 추가 열은 분석과 다운로드에서 제외합니다.
+
+업로드한 파일은 해당 사용자의 세션에서 읽으며, 앱 코드가 디스크에 저장하거나 공용 데이터 캐시에 넣지 않습니다. 분석과 다운로드에는 해당 사용자가 업로드한 데이터만 사용합니다. 학생 CSV가 실수로 저장소에 추가되는 것을 줄이기 위해 파일 이름 패턴을 `.gitignore`에 등록했습니다.
+
+이 방식은 데이터 업로드가 필요한 구조이며, 로그인이나 교사 신원 확인 기능은 아닙니다. 같은 형식의 CSV를 가진 사람은 자신의 데이터를 분석할 수 있습니다.
+
+## 데이터 해석
+
+각 과목은 100점 만점이며, 평균 점수는 세 과목의 산술평균입니다. 모든 탭의 분석에 사이드바 필터가 적용됩니다. 그룹별 학생 수도 함께 확인하세요. 관측된 차이나 상관계수만으로 인과관계를 판단할 수 없으며, 급식 유형은 경제적 배경을 직접 측정한 값이 아닙니다.

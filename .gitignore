@@ -1,5 +1,9 @@
 .streamlit/secrets.toml
 
+# Student datasets must be supplied by each user, not committed.
+[Ss]tudent[Pp]erformance*.csv
+[Ss]tudents[Pp]erformance*.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
